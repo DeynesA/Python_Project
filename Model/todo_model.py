@@ -1,44 +1,54 @@
-class ToDoView:
-    def display_menu(self):
+class ToDoModel:
+    def __init__(self, dateipfad):
         """
-        Zeigt das Hauptmenü der Anwendung an.
+        Initialisiert das Model mit dem Pfad zur Datei, in der die Aufgaben gespeichert werden.
         """
-        print("\nTo-Do-Liste Menü:")
-        print("1. Aufgabe hinzufügen")
-        print("2. Aufgaben anzeigen")
-        print("3. Aufgabe als erledigt markieren")
-        print("4. Aufgabe löschen")
-        print("5. Beenden")
+        self.dateipfad = dateipfad
+        self.aufgaben = self.lade_aufgaben()
 
-    def get_user_choice(self):
+    def lade_aufgaben(self):
         """
-        Holt die Auswahl des Benutzers.
-        """
-        return input("Wähle 1-5 aus: ")
-
-    def get_task_input(self):
-        """
-        Holt die Eingabe für eine neue Aufgabe.
-        """
-        return input("Gib die Aufgabe ein: ")
-
-    def display_tasks(self, tasks):
-        """
-        Zeigt die Aufgaben an.
-        """
-        if tasks:
-            for i, task in enumerate(tasks, 1):
-                print(f"{i}. {task}")
-        else:
-            print("Keine Aufgaben gefunden.")
-
-    def get_task_numbers(self):
-        """
-        Holt die Nummern der Aufgaben, die bearbeitet werden sollen.
+        Lädt die Aufgaben aus der Datei.
         """
         try:
-            task_numbers = input("Gib die Nummern der Aufgaben ein (z.B. 1,3,5): ")
-            return [int(x) for x in task_numbers.split(',')]
-        except ValueError:
-            print("Ungültige Eingabe! Gib eine gültige Zahl ein.")
+            with open(self.dateipfad, 'r') as file:
+                return [line.strip() for line in file.readlines()]
+        except FileNotFoundError:
             return []
+
+    def speichere_aufgaben(self):
+        """
+        Speichert die Aufgaben in der Datei.
+        """
+        with open(self.dateipfad, 'w') as file:
+            for aufgabe in self.aufgaben:
+                file.write(f"{aufgabe}\n")
+
+    def aufgabe_hinzufuegen(self, aufgabe):
+        """
+        Fügt eine neue Aufgabe hinzu und speichert sie.
+        """
+        self.aufgaben.append(aufgabe)
+        self.speichere_aufgaben()
+
+    def aufgaben_anzeigen(self):
+        """
+        Gibt die Liste der Aufgaben zurück.
+        """
+        return self.aufgaben
+
+    def aufgabe_als_erledigt_markieren(self, task_numbers):
+        """
+        Markiert die angegebenen Aufgaben als erledigt.
+        """
+        for number in task_numbers:
+            if 0 <= number < len(self.aufgaben):
+                self.aufgaben[number] += " (erledigt)"
+        self.speichere_aufgaben()
+
+    def aufgabe_loeschen(self, task_numbers):
+        """
+        Löscht die angegebenen Aufgaben.
+        """
+        self.aufgaben = [task for i, task in enumerate(self.aufgaben) if i not in task_numbers]
+        self.speichere_aufgaben()
