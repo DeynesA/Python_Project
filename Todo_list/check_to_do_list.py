@@ -1,13 +1,13 @@
 import os
 
 # Pfad zur Datei
-pfad = os.path.join(".", "todo_list.txt")
+pfad = os.path.join("./todo_list.txt")
 
 # Funktion zum Hinzufügen einer Aufgabe
 def add_task():
     """
     Diese Methode ermöglicht es dem Benutzer, eine neue Aufgabe hinzuzufügen.
-    Die Aufgabe wird in der Datei gespeichert.
+    Die Aufgabe wird in der Datei .txt  gespeichert.
     """
     try:
         task = input("Gib die Aufgabe ein: ")
