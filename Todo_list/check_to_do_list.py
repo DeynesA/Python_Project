@@ -11,7 +11,7 @@ def add_task():
     """
     try:
         task = input("Gib die Aufgabe ein: ")
-        with open(pfad, 'a') as file:
+        with open(pfad, "+a") as file:
             file.write(f"{task}\n")
         print("Aufgabe erfolgreich hinzugefügt.")
     except Exception as e:
